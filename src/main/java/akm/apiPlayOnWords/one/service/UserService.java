@@ -1,8 +1,8 @@
 package akm.apiPlayOnWords.one.service;
 
+import akm.apiPlayOnWords.one.dao.UserStatsDAO;
 import akm.apiPlayOnWords.one.model.UserIn;
-import akm.apiPlayOnWords.one.populator.UserOutPopulator;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import akm.apiPlayOnWords.one.model.UserStats;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -16,15 +16,14 @@ import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    ObjectMapper mapper = new ObjectMapper();
-
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
+    ObjectMapper mapper = new ObjectMapper();
 
     /**
      * https://api.github.com/users/{login}
@@ -75,6 +74,26 @@ public class UserService {
         return null;
     }
 
+    public void saveUserStats(String login) {
+        LOG.info("Saving user statistics : "+login);
+        UserStats us = new UserStats();
+        us.setLogin(login);
 
+        UserStatsDAO usDAO = new UserStatsDAO();
+        us = usDAO.find(us);
 
+        if (Objects.nonNull(us)) {
+            LOG.debug(us.toString());
+            int requestCount = us.getRequestCount();
+            requestCount++;
+            us.setRequestCount(requestCount);
+            usDAO.update(us);
+        } else {
+            us = new UserStats();
+            LOG.debug(us.toString());
+            us.setLogin(login);
+            us.setRequestCount(1);
+            usDAO.save(us);
+        }
+    }
 }
