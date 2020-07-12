@@ -88,12 +88,14 @@ public class UserService {
             requestCount++;
             us.setRequestCount(requestCount);
             usDAO.update(us);
+            LOG.debug("Updated.");
         } else {
             us = new UserStats();
             LOG.debug(us.toString());
             us.setLogin(login);
             us.setRequestCount(1);
             usDAO.save(us);
+            LOG.debug("Saved.");
         }
     }
 }

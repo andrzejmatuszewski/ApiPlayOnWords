@@ -1,5 +1,6 @@
 package akm.apiPlayOnWords.one.populator;
 
+import akm.apiPlayOnWords.one.exceptions.CalculationsGeneralException;
 import akm.apiPlayOnWords.one.exceptions.UserInNullException;
 import akm.apiPlayOnWords.one.model.UserIn;
 import akm.apiPlayOnWords.one.model.UserOut;
@@ -18,7 +19,12 @@ public class UserOutPopulator {
         userOut.setType(userIn.getType());
         userOut.setAvatarUrl(userIn.getAvatar_url());
         userOut.setCreatedAt(userIn.getCreated_at());
-        userOut.setCalculations(calculation(userIn));
+        try {
+            userOut.setCalculations(calculation(userIn));
+        } catch (CalculationsGeneralException ex) {
+            ex.printStackTrace();
+            userOut.setCalculations(0.0);
+        }
     }
 
     private double calculation(UserIn userIn) {
@@ -28,6 +34,9 @@ public class UserOutPopulator {
             int six = 6;
             int two = 2;
 
+            if (followers == 0) {
+                throw new CalculationsGeneralException("followers");
+            }
 
             return six / followers * (two + publicRepos);
         } else {
