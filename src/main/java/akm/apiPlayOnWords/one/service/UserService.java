@@ -4,17 +4,27 @@ import akm.apiPlayOnWords.one.model.UserIn;
 import akm.apiPlayOnWords.one.populator.UserOutPopulator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Service
+@RequiredArgsConstructor
 public class UserService {
 
     ObjectMapper mapper = new ObjectMapper();
+
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 
     /**
      * https://api.github.com/users/{login}
@@ -40,9 +50,9 @@ public class UserService {
 
             StringBuilder sb = new StringBuilder();
             String output;
-            System.out.println("Output from Server .... \n");
+            LOG.info("Output from Server ...");
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
+                LOG.info(output);
                 sb.append(output);
             }
             conn.disconnect();
@@ -64,5 +74,7 @@ public class UserService {
         }
         return null;
     }
+
+
 
 }

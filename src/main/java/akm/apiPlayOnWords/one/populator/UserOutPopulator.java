@@ -3,9 +3,11 @@ package akm.apiPlayOnWords.one.populator;
 import akm.apiPlayOnWords.one.exceptions.UserInNullException;
 import akm.apiPlayOnWords.one.model.UserIn;
 import akm.apiPlayOnWords.one.model.UserOut;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+@Service
 public class UserOutPopulator {
 
     public void populate(UserOut userOut, UserIn userIn) {
